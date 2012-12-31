@@ -3,81 +3,41 @@ String[][] parsedData;
 FlightNode[] flightNodesTwoWay = new FlightNode[1];
 FlightNode[] flightNodesTotal = new FlightNode[1];
 
+String[] flightCountries;
+String[][] splitCountries;
+CountryNode[] countryNodes = new CountryNode[0];
+
+float counter = 0;
+int maxWeight = 0;
+
+
 void setup() {
-
-  flightData  = loadStrings("citiesToCitiesPass.csv");
-  parsedData = new String[flightData.length][7];
-
-  for (int i=0; i<flightData.length; i++) {
-    parsedData[i] = split(flightData[i], ',');
-    parsedData[i] = trim(parsedData[i]);
-    if (parsedData[i][1].length() == 2) {
-      parsedData[i][1] = "USA";
-    }
-    if (parsedData[i][3].length() == 2) {
-      parsedData[i][3] = "USA";
-    }
-
-    FlightNode flightHolder = new FlightNode(parsedData[i][1], parsedData[i][3], parsedData[i][4], parsedData[i][5], parsedData[i][6], parsedData[i][7], parsedData[i][8]);
-
-    if (i == 0) { //fill the first flightNodesTwoWay slot
-      flightNodesTwoWay[0] = flightHolder;
-    }
-    else if (i > 0) {
-      boolean flightEqualFlag = false;
-      for (int a=0; a<flightNodesTwoWay.length; a++) {
-        if (flightNodesTwoWay[a].isNodeEqual(flightHolder)) {
-          flightNodesTwoWay[a].addPass(flightHolder);
-          flightEqualFlag = true;
-          break;
-        }
-      }
-      if (!flightEqualFlag) {
-        flightNodesTwoWay = (FlightNode[])append(flightNodesTwoWay, flightHolder);
-      }
+  parseCountryData();  
+  for (int i=0; i<countryNodes.length; i++) {
+    if (countryNodes[i].country1.equals("United States")) {
+      println(countryNodes[i].country1 + "," + countryNodes[i].country2 + "," + countryNodes[i].weight);
+      counter++;
     }
   }
-  for (int i=0; i<flightNodesTwoWay.length; i++) {
-    if (i == 0) {
-      flightNodesTotal[0] = flightNodesTwoWay[0];
-    }
-    else {
-      boolean flightEqualFlag = false;
-      for (int o=0; o<flightNodesTotal.length; o++) {
-        if (flightNodesTotal[o].isBetweenCountries(flightNodesTwoWay[i])) {
-          flightNodesTotal[o].addPass(flightNodesTwoWay[i]);
-          flightEqualFlag = true;
-          break;
-        }
-      }
-      if (!flightEqualFlag) {
-        flightNodesTotal = (FlightNode[])append(flightNodesTotal, flightNodesTwoWay[i]);
-      }
-    }
-  }
+  println(counter);
 
-  for (int i=0; i<flightNodesTwoWay.length; i++) {
-    if (flightNodesTwoWay[i].fromCountry.equals("USA") && flightNodesTwoWay[i].toCountry.equals("United Kingdom")) {
-      println("\n" + "Node Count: " + i);
-      flightNodesTwoWay[i].printFlightNode();
-    }
-    if (flightNodesTwoWay[i].fromCountry.equals("United Kingdom") && flightNodesTwoWay[i].toCountry.equals("USA")) {
-      println("\n" + "Node Count: " + i);
-      flightNodesTwoWay[i].printFlightNode();
-    }
-  }
-  for (int i=0; i<flightNodesTotal.length; i++) {
-    if (flightNodesTotal[i].fromCountry.equals("United Kingdom") && flightNodesTotal[i].toCountry.equals("USA")) {
-      println("\n" + "Total Count: " + i);
-      flightNodesTotal[i].printFlightNode();
-    }
-    if (flightNodesTotal[i].fromCountry.equals("USA") && flightNodesTotal[i].toCountry.equals("United Kingdom")) {
-      println("\n" + "Total Count: " + i);
-      flightNodesTotal[i].printFlightNode();
-    }
-  }
+  size(400, 400);
+  background(255);
 }
 
 void draw() {
+  pushMatrix();
+  translate(width/2, height/2);
+  rotate(PI);
+  for (int i=0; i<countryNodes.length; i++) {
+    if (countryNodes[i].country1.equals("China")) {
+      fill(150);
+      ellipse(0, map(countryNodes[i].weight, 0, 400, 100, 350), 10, 10);
+//      pushMatrix();
+      rotate(TWO_PI/counter);
+//      popMatrix();
+    }
+  }
+  popMatrix();
 }
 
