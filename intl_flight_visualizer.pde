@@ -1,8 +1,3 @@
-String[] flightData;
-String[][] parsedData;
-FlightNode[] flightNodesTwoWay = new FlightNode[1];
-FlightNode[] flightNodesTotal = new FlightNode[1];
-
 String[] flightCountries;
 String[][] splitCountries;
 CountryNode[] countryNodes = new CountryNode[0];
